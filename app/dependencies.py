@@ -1,13 +1,12 @@
-from models import Integration, Client
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
-from models import User, Admin, Player, Manager
-from security.tokens import decode_token
+from app.models import User, Admin, Player, Manager, Integration, Client
+from app.security.tokens import decode_token
 import jwt
-from database import get_session
+from app.database import get_session
 
 
 security = HTTPBearer()
@@ -56,12 +55,12 @@ async def get_current_client(
     client: Client | None = result.one_or_none()
     if client is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not client.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return client
@@ -75,12 +74,12 @@ async def get_current_integration(
     integration: Integration | None = result.one_or_none()
     if integration is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not integration.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return integration
@@ -94,12 +93,12 @@ async def get_current_user(
     user: User | None = result.one_or_none()
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not user.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return user
@@ -113,12 +112,12 @@ async def get_current_admin(
     admin: Admin | None = result.one_or_none()
     if admin is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not admin.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return admin
@@ -132,12 +131,12 @@ async def get_current_player(
     player: Player | None = result.one_or_none()
     if player is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not player.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return player
@@ -151,12 +150,12 @@ async def get_current_manager(
     manager: Manager | None = result.one_or_none()
     if manager is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid refresh token"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Unknown access token or access denied"
         )
     if not manager.is_active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Client is inactive (maybe blocked)"
         )
     return manager
