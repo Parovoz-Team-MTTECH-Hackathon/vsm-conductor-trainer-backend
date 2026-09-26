@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Response
+from fastapi import APIRouter, Depends, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_session
@@ -69,3 +69,12 @@ async def delete(
     await AuthService(session).delete_client(self_id=admin.client_id, client_id=data.client_id)
     return Response()
 
+
+@router.post("/recovery")
+async def recovery() -> Response:
+    # Необходимо реализовать, если будут доступны сценарии восстановления пароля
+    # (В рамках хакатона нет доступных сценариев, ибо для восстановления требуются
+    # внешние сервисы с использованием SMTP-Email и т.п.)
+    return Response(
+        status_code=status.HTTP_501_NOT_IMPLEMENTED
+    )

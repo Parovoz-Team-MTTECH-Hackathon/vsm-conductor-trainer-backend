@@ -122,7 +122,8 @@ class AuthService:
                 detail="Invalid credentials"
             )
         return TokenResponse(access_token=create_access_token(user.client_id),
-                             refresh_token=create_refresh_token(user.client_id))
+                             refresh_token=create_refresh_token(user.client_id),
+                             client_type=user.client_type, user_type=user.user_type)
 
     async def login_integration(self, key: str, secret: str) -> TokenResponse:
         result = await self.session.scalars(select(Integration).where(Integration.key == key))
@@ -143,7 +144,8 @@ class AuthService:
                 detail="Invalid credentials"
             )
         return TokenResponse(access_token=create_access_token(integration.client_id),
-                             refresh_token=create_refresh_token(integration.client_id))
+                             refresh_token=create_refresh_token(integration.client_id),
+                             client_type=integration.client_type, user_type=None)
 
     async def refresh(self, refresh_token: str) -> TokenResponse:
         try:
@@ -192,6 +194,7 @@ class AuthService:
         return TokenResponse(
             access_token=create_access_token(client.client_id),
             refresh_token=create_refresh_token(client.client_id),
+            client_type=None, user_type=None
         )
 
 

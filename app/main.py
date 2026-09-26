@@ -24,3 +24,8 @@ application = FastAPI(
 )
 
 application.include_router(auth.router)
+application.include_router(admin.router)
+application.include_router(player.router)
+application.include_router(manager.router)
+application.include_router(integration.router)
+application.include_router(scenario.router)

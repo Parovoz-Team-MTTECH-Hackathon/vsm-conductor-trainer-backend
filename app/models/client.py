@@ -10,8 +10,8 @@ class ClientType(enum.StrEnum):
 
 
 class UserType(enum.StrEnum):
-    ADMIN = "admin"
     PLAYER = "player"
+    ADMIN = "admin"
     MANAGER = "manager"
 
 
