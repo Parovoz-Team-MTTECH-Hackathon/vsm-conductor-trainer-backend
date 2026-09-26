@@ -30,7 +30,11 @@ async def signup_player(data: PlayerSignupRequest, session: AsyncSession = Depen
     )
 
 @router.post("/signup/manager", response_model=TokenResponse)
-async def signup_manager(data: ManagerSignupRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
+async def signup_manager(
+        data: ManagerSignupRequest,
+        session: AsyncSession = Depends(get_session),
+        admin: Admin = Depends(get_current_admin)
+) -> TokenResponse:
     return await AuthService(session).signup_manager(
         email=str(data.email),
         password=data.password,
