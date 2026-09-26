@@ -53,7 +53,7 @@ async def refresh(data: RefreshRequest, session: AsyncSession = Depends(get_sess
 
 
 @router.post("/delete")
-async def signup_integration(
+async def delete(
         data: DeleteRequest,
         session: AsyncSession = Depends(get_session),
         admin: Admin = Depends(get_current_admin)
