@@ -43,7 +43,11 @@ async def login_integration(data: IntegrationLoginRequest, session: AsyncSession
 
 
 @router.post("/signup/integration", response_model=TokenResponse)
-async def signup_integration(data: IntegrationSignupRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
+async def signup_integration(
+        data: IntegrationSignupRequest,
+        session: AsyncSession = Depends(get_session),
+        admin: Admin = Depends(get_current_admin)
+) -> TokenResponse:
     return await AuthService(session).signup_integration(key=data.key, secret=data.secret, name=data.name)
 
 
