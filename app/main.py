@@ -38,4 +38,4 @@ application.include_router(scenario.router)
 
 @application.get("/")
 async def index():
-    RedirectResponse("/static/index.html")
+    return RedirectResponse("/static/index.html")
