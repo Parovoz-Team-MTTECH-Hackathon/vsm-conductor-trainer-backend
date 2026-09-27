@@ -28,7 +28,7 @@ class Client(Base):
 class Integration(Client):
     __tablename__ = "integrations"
 
-    client_id: Mapped[int] = mapped_column(ForeignKey("clients.client_id"), primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.client_id", ondelete="CASCADE"), primary_key=True)
     name: Mapped[str] = mapped_column(String(256), nullable=False)
     key: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     secret_hash: Mapped[str] = mapped_column(String(256), nullable=False)
@@ -39,7 +39,7 @@ class Integration(Client):
 class User(Client):
     __tablename__ = "users"
 
-    client_id: Mapped[int] = mapped_column(ForeignKey("clients.client_id"), primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.client_id", ondelete="CASCADE"), primary_key=True)
     email: Mapped[str] = mapped_column(String(128), unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String(256), nullable=False)
     user_type: Mapped[UserType] = mapped_column(Enum(UserType, name="user_type"), nullable=False)
@@ -54,7 +54,7 @@ class Admin(User):
 class Player(User):
     __tablename__ = "players"
 
-    client_id: Mapped[int] = mapped_column(ForeignKey("users.client_id"), primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("users.client_id", ondelete="CASCADE"), primary_key=True)
     first_name: Mapped[str] = mapped_column(String(64), nullable=False)
     last_name: Mapped[str] = mapped_column(String(64), nullable=False)
     patronymic_name: Mapped[str] = mapped_column(String(64), nullable=False)
@@ -65,7 +65,14 @@ class Player(User):
 class Manager(User):
     __tablename__ = "managers"
 
-    client_id: Mapped[int] = mapped_column(ForeignKey("users.client_id"), primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("users.client_id", ondelete="CASCADE"), primary_key=True)
     name: Mapped[str] = mapped_column(String(64), nullable=False)
 
     __mapper_args__ = dict(polymorphic_identity=UserType.MANAGER)
+
+
+class Management(Base):
+    __tablename__ = "managements"
+
+    player_id: Mapped[int] = mapped_column(ForeignKey("players.client_id", ondelete="CASCADE"), primary_key=True)
+    manager_id: Mapped[int] = mapped_column(ForeignKey("managers.client_id", ondelete="CASCADE"), primary_key=True)

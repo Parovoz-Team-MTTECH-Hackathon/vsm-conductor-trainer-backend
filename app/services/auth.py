@@ -1,8 +1,8 @@
+from .service import Service
 from ..config import ADMIN_EMAIL
 from ..models import Integration, Client, Admin, Manager, Player
 from ..models.client import User, ClientType, UserType
 from ..schemas.auth import TokenResponse
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from ..security.hashing import verify_value, hash_value
 from ..security.tokens import create_access_token, create_refresh_token, decode_token
@@ -10,10 +10,7 @@ import jwt
 from fastapi import HTTPException, status
 
 
-class AuthService:
-    def __init__(self, session: AsyncSession):
-        self.session = session
-
+class AuthService(Service):
     async def signup_integration(self, name: str, key: str, secret: str) -> TokenResponse:
         result = await self.session.scalars(select(Integration).where(Integration.key == key))
         if result.one_or_none() is not None:
@@ -199,6 +196,11 @@ class AuthService:
 
 
     async def delete_client(self, self_id: int, client_id: int) -> None:
+        if self_id == client_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Self user can't be deleted"
+            )
         result = await self.session.scalars(
             select(Client).where(Client.client_id == client_id)
         )
@@ -209,11 +211,5 @@ class AuthService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Client not found"
             )
-        if self_id == client_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Self user can't be deleted"
-            )
-
         await self.session.delete(client)
         await self.session.commit()
