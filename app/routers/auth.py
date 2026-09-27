@@ -18,20 +18,12 @@ router = APIRouter(
 async def login_user(response: Response, data: UserLoginRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
     token_response: TokenResponse = await AuthService(session).login_user(email=str(data.email), password=data.password)
     response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
-    response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
@@ -51,7 +43,7 @@ async def signup_player(response: Response, data: PlayerSignupRequest, session: 
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
@@ -72,7 +64,7 @@ async def signup_manager(
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
@@ -86,7 +78,7 @@ async def login_integration(response: Response, data: IntegrationLoginRequest, s
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
@@ -105,7 +97,7 @@ async def signup_integration(
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
@@ -119,7 +111,7 @@ async def refresh(response: Response, refresh_token : str | None = Cookie(defaul
         httponly=True,
         secure=True,
         samesite="lax",
-        path="/auth/refresh"
+        path="/"
     )
     return token_response
 
