@@ -7,11 +7,12 @@ from app.database import engine, SessionLocal
 from app.models import Base
 from app.services.auth import AuthService
 from fastapi.staticfiles import StaticFiles  # Импорт
-
+import aiofiles.os
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    await aiofiles.os.makedirs("static", exist_ok=True)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with SessionLocal() as session:
@@ -24,6 +25,7 @@ application = FastAPI(
     title="VSM Conductor Trainer",
     description="API Геймифицированной системы обучения проводников ВСМ от команды \"ПАРАВОЗ\" хакатона Московского Транспорта"
 )
+
 
 static_files = StaticFiles(directory="static")
 application.mount("/static", static_files, name="static")
