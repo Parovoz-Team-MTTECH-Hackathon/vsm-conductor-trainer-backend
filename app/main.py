@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-
+from fastapi.responses import RedirectResponse
 from app.config import ADMIN_EMAIL, ADMIN_PASSWORD
 from app.routers import *
 from app.database import engine, SessionLocal
@@ -35,3 +35,7 @@ application.include_router(player.router)
 application.include_router(manager.router)
 application.include_router(integration.router)
 application.include_router(scenario.router)
+
+@application.get("/")
+async def index():
+    RedirectResponse("/static/index.html")
