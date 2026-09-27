@@ -58,14 +58,7 @@ async def signup_manager(
         password=data.password,
         name=data.name
     )
-    response.set_cookie(
-        key="refresh_token",
-        value=token_response.refresh_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/"
-    )
+
     return token_response
 
 
