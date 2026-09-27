@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Response, status, Cookie
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from ..database import get_session
 from ..dependencies import get_current_admin
 from ..models import Admin
@@ -110,7 +110,7 @@ async def refresh(response: Response, refresh_token : str | None = Cookie(defaul
 
 
 @router.post("/logout", response_model=TokenResponse)
-async def refresh(response: Response) -> Response:
+async def refresh(response: Response) -> RedirectResponse:
     response.delete_cookie(
         key="refresh_token",
         httponly=True,
@@ -118,7 +118,7 @@ async def refresh(response: Response) -> Response:
         samesite="lax",
         path="/"
     )
-    return Response()
+    return RedirectResponse("/")
 
 
 @router.post("/delete")
