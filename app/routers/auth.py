@@ -109,7 +109,7 @@ async def refresh(response: Response, refresh_token : str | None = Cookie(defaul
     return token_response
 
 
-@router.post("/logout", response_model=TokenResponse)
+@router.get("/logout", response_model=TokenResponse)
 async def logout(response: Response) -> RedirectResponse:
     response.delete_cookie(
         key="refresh_token",
