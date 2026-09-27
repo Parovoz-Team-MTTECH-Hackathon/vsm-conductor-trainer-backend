@@ -1,3 +1,5 @@
+import json
+
 from .service import Service
 from ..models.scenario import PlayerAchievement, ScenarioComplete, Scenario, Achievement
 from sqlalchemy import select
@@ -13,7 +15,13 @@ class ScenarioService(Service):
             label="New scenario",
             description="No description...",
             icon="",
-            creation_time=datetime.now()
+            creation_time=datetime.now(),
+            scenario_project_json="",
+            scenario_completed_json=json.dumps(dict(
+                label="New scenario",
+                description="No description...",
+                icon=""
+            ))
         )
         self.session.add(scenario)
         await self.session.commit()
