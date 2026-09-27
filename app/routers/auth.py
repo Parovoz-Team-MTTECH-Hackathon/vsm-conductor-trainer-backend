@@ -45,7 +45,7 @@ async def signup_player(response: Response, data: PlayerSignupRequest, session: 
         last_name=data.last_name,
         patronymic_name=data.patronymic_name
     )
-    token_response.set_cookie(
+    response.set_cookie(
         key="access_token",
         value=token_response.access_token,
         httponly=True,
