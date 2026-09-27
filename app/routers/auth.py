@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, Response, status, Cookie
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_session
 from ..dependencies import get_current_admin
 from ..models import Admin
-from ..schemas.auth import UserLoginRequest, RefreshRequest, TokenResponse, PlayerSignupRequest, \
+from ..schemas.auth import UserLoginRequest, TokenResponse, PlayerSignupRequest, \
     IntegrationSignupRequest, ManagerSignupRequest, IntegrationLoginRequest, DeleteRequest
 from ..services.auth import AuthService
 
@@ -111,8 +111,8 @@ async def signup_integration(
 
 
 @router.post("/refresh", response_model=TokenResponse)
-async def refresh(response: Response, data: RefreshRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
-    token_response: TokenResponse = await AuthService(session).refresh(data.refresh_token)
+async def refresh(response: Response, refresh_token : str | None = Cookie(default=None) , session: AsyncSession = Depends(get_session)) -> TokenResponse:
+    token_response: TokenResponse = await AuthService(session).refresh(refresh_token)
     response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
