@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_session
-from ..dependencies import get_current_admin, get_current_manager
+from ..dependencies import get_current_manager
 from ..models import Manager
 from ..schemas.client import ManagerResponse, PlayerResponse
 from ..services.manager import ManagerService
