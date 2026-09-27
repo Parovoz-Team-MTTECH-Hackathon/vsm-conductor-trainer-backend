@@ -1,12 +1,12 @@
 from .service import Service
 from ..models import Player, ClientType, UserType
 from ..models.client import Management
-from ..models.scenario import PlayerAchievement, ScenarioComplete, Scenario, Achievement
+from ..models.scenario import PlayerAchievement, ScenarioComplete, Achievement
 from sqlalchemy import select, func
 from fastapi import HTTPException, status
 
 from ..schemas.client import PlayerResponse, PublicPlayerResponse,PlayerShortGameStatisticResponse, PlayerGameStatisticResponse
-from ..schemas.scenario import AchievementResponse, ScenarioResponse
+from ..schemas.scenario import AchievementResponse
 
 
 class PlayerService(Service):
@@ -110,9 +110,17 @@ class PlayerService(Service):
         )
         completed_scenarios = list(scenario_completes_result.all())
 
+        result = await self.session.scalars(select(Player).where(Player.client_id == player_id))
+        player: Player | None = result.one_or_none()
+        if player is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND
+            )
+
 
         return PlayerGameStatisticResponse(
             player_id = player_id,
+            shorted_name=f"{player.first_name} {player.last_name[0]}." if len(player.last_name) > 0 else player.first_name,
             achievements = [AchievementResponse.model_validate(achievement) for achievement in player_achievements],
             completed_scenarios= [scenario_complete.scenario_id for scenario_complete in completed_scenarios],
             score = sum(achievement.score_delta for achievement in player_achievements)
@@ -146,10 +154,14 @@ class PlayerService(Service):
             .limit(10)
         )
 
+
         return [
-            PlayerShortGameStatisticResponse(
-                player_id=player.client_id,
-                score=score,
-            )
+            PlayerShortGameStatisticResponse(player_id=player.client_id,
+                                             shorted_name=f"{player.first_name} {player.last_name[0]}.",
+                                             score=score)
+            if len(player.last_name) > 0 else
+            PlayerShortGameStatisticResponse(player_id=player.client_id,
+                                             shorted_name=player.first_name,
+                                             score=score)
             for player, score in result.all()
         ]

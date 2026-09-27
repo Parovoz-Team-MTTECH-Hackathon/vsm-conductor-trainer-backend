@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from app.models import ClientType, UserType
-from app.schemas.scenario import ScenarioResponse, AchievementResponse
+from app.schemas.scenario import AchievementResponse
 
 
 class ClientResponse(BaseModel):
@@ -44,6 +44,7 @@ class ManagerResponse(UserResponse):
 
 
 class PlayerShortGameStatisticResponse(BaseModel):
+    shorted_name: str
     player_id: int
     score: int
 

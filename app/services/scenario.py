@@ -1,5 +1,3 @@
-import json
-
 from .service import Service
 from ..models.scenario import PlayerAchievement, ScenarioComplete, Scenario, Achievement
 from sqlalchemy import select
