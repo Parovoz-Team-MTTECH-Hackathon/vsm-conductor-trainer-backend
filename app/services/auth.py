@@ -85,6 +85,26 @@ class AuthService(Service):
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="User email already exists"
             )
+        if len(first_name) == 0 or first_name.isspace():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid first name"
+            )
+        if len(last_name) == 0 or last_name.isspace():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid last name"
+            )
+        if len(patronymic_name) == 0 or patronymic_name.isspace():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid patronymic name"
+            )
+        if len(email) == 0 or patronymic_name.isspace():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email"
+            )
         player = Player(
             first_name=first_name,
             last_name=last_name,

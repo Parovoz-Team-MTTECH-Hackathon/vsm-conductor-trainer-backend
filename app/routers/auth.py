@@ -46,14 +46,6 @@ async def signup_player(response: Response, data: PlayerSignupRequest, session: 
         patronymic_name=data.patronymic_name
     )
     response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
-    response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
         httponly=True,
@@ -75,14 +67,6 @@ async def signup_manager(
         name=data.name
     )
     response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
-    response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
         httponly=True,
@@ -96,14 +80,6 @@ async def signup_manager(
 @router.post("/login/integration", response_model=TokenResponse)
 async def login_integration(response: Response, data: IntegrationLoginRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
     token_response: TokenResponse = await AuthService(session).login_integration(key=data.key, secret=data.secret)
-    response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
     response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
@@ -124,14 +100,6 @@ async def signup_integration(
 ) -> TokenResponse:
     token_response: TokenResponse = await AuthService(session).signup_integration(key=data.key, secret=data.secret, name=data.name)
     response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
-    response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
         httponly=True,
@@ -145,14 +113,6 @@ async def signup_integration(
 @router.post("/refresh", response_model=TokenResponse)
 async def refresh(response: Response, data: RefreshRequest, session: AsyncSession = Depends(get_session)) -> TokenResponse:
     token_response: TokenResponse = await AuthService(session).refresh(data.refresh_token)
-    response.set_cookie(
-        key="access_token",
-        value=token_response.access_token,
-        httponly=True,
-        secure=True,
-        samesite="lax",
-        path="/",
-    )
     response.set_cookie(
         key="refresh_token",
         value=token_response.refresh_token,
