@@ -6,6 +6,8 @@ from app.routers import *
 from app.database import engine, SessionLocal
 from app.models import Base
 from app.services.auth import AuthService
+from fastapi.staticfiles import StaticFiles  # Импорт
+
 
 
 @asynccontextmanager
@@ -22,6 +24,10 @@ application = FastAPI(
     title="VSM Conductor Trainer",
     description="API Геймифицированной системы обучения проводников ВСМ от команды \"ПАРАВОЗ\" хакатона Московского Транспорта"
 )
+
+static_files = StaticFiles(directory="static")
+application.mount("/static", static_files, name="static")
+
 
 application.include_router(auth.router)
 application.include_router(admin.router)
