@@ -17,11 +17,11 @@ class ScenarioService(Service):
             icon="",
             creation_time=datetime.now(),
             scenario_project_json="",
-            scenario_compiled_json=json.dumps(dict(
+            scenario_compiled_json=dict(
                 label="New scenario",
                 description="No description...",
                 icon=""
-            ))
+            )
         )
         self.session.add(scenario)
         await self.session.commit()
@@ -106,7 +106,7 @@ class ScenarioService(Service):
             scenario.label = scenario_compiled_json["label"]
             scenario.description = scenario_compiled_json["description"]
             scenario.icon = scenario_compiled_json["icon"]
-            scenario.creation_time = datetime.fromtimestamp(scenario_compiled_json["creation_time"])
+            scenario.creation_time = datetime.strptime(scenario_compiled_json["creation_time"], "%Y-%m-%dT%H:%M:%S.%fZ")
             for node in nodes:
                 if nodes[node]["content_type"] == "achievement":
                     content = nodes[node]["content"]

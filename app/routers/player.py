@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, Response
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_session
@@ -49,7 +50,7 @@ async def join(
         player: Player = Depends(get_current_player)
 ) -> Response:
     await PlayerService(session=session).join(manager_id=manager_id, player_id=player.client_id)
-    return Response()
+    return RedirectResponse("/")
 
 
 @router.get("/statistic")
