@@ -109,6 +109,18 @@ async def refresh(response: Response, refresh_token : str | None = Cookie(defaul
     return token_response
 
 
+@router.post("/logout", response_model=TokenResponse)
+async def refresh(response: Response) -> Response:
+    response.delete_cookie(
+        key="refresh_token",
+        httponly=True,
+        secure=True,
+        samesite="lax",
+        path="/"
+    )
+    return Response()
+
+
 @router.post("/delete")
 async def delete(
         data: DeleteRequest,
