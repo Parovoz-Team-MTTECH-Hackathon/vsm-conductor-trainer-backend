@@ -17,7 +17,7 @@ class ScenarioService(Service):
             icon="",
             creation_time=datetime.now(),
             scenario_project_json="",
-            scenario_completed_json=json.dumps(dict(
+            scenario_compiled_json=json.dumps(dict(
                 label="New scenario",
                 description="No description...",
                 icon=""
